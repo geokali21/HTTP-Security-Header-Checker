@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "http-security-header-checker"
+version = "1.0.0"
+description = "Passive CLI tool that reviews HTTP security headers of sites you own or are authorised to test."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Geovani Giesan" }]
+dependencies = ["requests>=2.31"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4"]
+
+[project.scripts]
+header-checker = "header_checker.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

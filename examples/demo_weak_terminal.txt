@@ -1,0 +1,46 @@
+================================================================
+ HTTP Security Header Checker v1.0.0
+================================================================
+Target      : http://127.0.0.1:44543/redirect
+Final URL   : http://127.0.0.1:44543/
+HTTP status : 200   (3 ms)
+Redirects   : http://127.0.0.1:44543/redirect -> http://127.0.0.1:44543/
+----------------------------------------------------------------
+[MISSING] Content-Security-Policy
+    Observation: No Content-Security-Policy header was observed.
+    Purpose    : Restricts which sources the browser may load scripts, styles and frames from, limiting the impact of injected content.
+    Potential risk: Without it, an XSS flaw (if one exists) is easier to exploit. Absence alone does not prove XSS exists.
+    Mitigation : Define a policy starting from default-src 'self'; use nonces or hashes instead of 'unsafe-inline'; consider Report-Only first.
+
+[REVIEW] Strict-Transport-Security
+    Observation: Final URL uses HTTP; browsers ignore HSTS over HTTP, so it cannot be evaluated here. Re-test the HTTPS URL.
+    Purpose    : Tells browsers to use HTTPS only for the site, reducing downgrade and SSL-stripping exposure.
+    Potential risk: Without it, a user's first or later plain-HTTP request may be intercepted by a network attacker.
+    Mitigation : Serve it on HTTPS responses with max-age of at least 15552000; add includeSubDomains only after checking subdomains.
+
+[MISSING] X-Content-Type-Options
+    Observation: No X-Content-Type-Options header was observed.
+    Purpose    : Stops browsers from guessing (MIME-sniffing) content types, preventing some content-confusion attacks.
+    Potential risk: Uploaded or reflected content may be interpreted as an executable type in some scenarios.
+    Mitigation : Send 'X-Content-Type-Options: nosniff' and ensure correct Content-Type on all responses.
+
+[MISSING] X-Frame-Options
+    Observation: No X-Frame-Options header (and no CSP frame-ancestors) was observed.
+    Purpose    : Controls whether the page can be embedded in frames, mitigating clickjacking.
+    Potential risk: A page that can be framed may be used in a clickjacking attempt against logged-in users.
+    Mitigation : Use CSP 'frame-ancestors' (preferred); optionally also send X-Frame-Options: DENY or SAMEORIGIN.
+
+[MISSING] Referrer-Policy
+    Observation: No Referrer-Policy header was observed (browser default applies).
+    Purpose    : Controls how much referrer (URL) information is sent to other sites.
+    Potential risk: Full URLs, which may hold tokens or identifiers in paths or queries, could leak to third parties.
+    Mitigation : Use 'strict-origin-when-cross-origin' or stricter; avoid putting secrets in URLs.
+
+[MISSING] Permissions-Policy
+    Observation: No Permissions-Policy header was observed.
+    Purpose    : Restricts access to powerful browser features (camera, microphone, geolocation) for the page and embedded frames.
+    Potential risk: Embedded third-party content may request features the site does not need.
+    Mitigation : Disable unused features, e.g. 'camera=(), microphone=(), geolocation=()'.
+
+Summary: 0 found, 5 missing, 1 to review
+Disclaimer: Findings are observations and potential risks based on one HTTP GET response. A missing or weak header does not by itself confirm a vulnerability, and this report is not a security score or a complete assessment.
