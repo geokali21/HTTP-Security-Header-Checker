@@ -1,1 +1,0 @@
-# HTTP-Security-Header-Checker
